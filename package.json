@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-hatch-baby-rest",
-  "version": "2.0.5",
-  "description": "Homebridge plugin for Hatch Baby Rest bluetooth night light",
+  "name": "homebridge-hatch-baby-rest-volume",
+  "version": "0.1.0",
+  "description": "Homebridge plugin for Hatch Baby Rest bluetooth night light volume",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha test/**/*.spec.ts && eslint '**/*.ts'",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dgreif/homebridge-hatch-baby-rest.git"
+    "url": "git://github.com/ScottMacWatters/homebridge-hatch-baby-rest-volume.git"
   },
   "keywords": [
     "homebridge-plugin",
@@ -34,7 +34,7 @@
     "night",
     "light"
   ],
-  "author": "dgreif",
+  "author": "ScottMacWatters",
   "license": "MIT",
   "dependencies": {
     "@abandonware/noble": "1.9.2-10",
@@ -71,9 +71,9 @@
     "homebridge": ">=0.4.0"
   },
   "bugs": {
-    "url": "https://github.com/dgreif/homebridge-hatch-baby-rest/issues"
+    "url": "https://github.com/ScottMacWatters/homebridge-hatch-baby-rest-volume/issues"
   },
-  "homepage": "https://github.com/dgreif/homebridge-hatch-baby-rest#readme",
+  "homepage": "https://github.com/ScottMacWatters/homebridge-hatch-baby-rest-volume#readme",
   "funding": [
     {
       "type": "paypal",

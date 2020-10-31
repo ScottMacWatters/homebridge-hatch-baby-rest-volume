@@ -11,16 +11,17 @@ import {
   CharacteristicSetCallback,
   CharacteristicValue,
 } from 'homebridge'
+import { AudioTrack } from '../hatch-baby-types'
 
-export class HatchBabyRestPlusAccessory {
+export class HatchBabyRestPlusVolumeAccessory {
   constructor(
     private light: HatchBabyRestPlus,
-    private accessory: PlatformAccessory
+    private accessory: PlatformAccessory,
+    private audioTrack?: AudioTrack
   ) {
     const { Service, Characteristic } = hap,
       lightService = this.getService(Service.Lightbulb),
       batteryService = this.getService(Service.BatteryService),
-      speakerService = this.getService(Service.Speaker),
       accessoryInfoService = this.getService(Service.AccessoryInformation),
       onSetHue = new Subject<number>(),
       onSetSaturation = new Subject<number>()
@@ -34,50 +35,21 @@ export class HatchBabyRestPlusAccessory {
     this.registerCharacteristic(
       lightService.getCharacteristic(Characteristic.On),
       light.onIsPowered,
-      (on) => light.setPower(on)
+      (on) => light.setVolume(on ? 25 : 0)
     )
 
     this.registerCharacteristic(
       lightService.getCharacteristic(Characteristic.Brightness),
       light.onBrightness,
-      (brightness) => light.setBrightness(brightness)
-    )
-    this.registerCharacteristic(
-      lightService.getCharacteristic(Characteristic.Hue),
-      light.onHue,
-      (hue) => onSetHue.next(hue)
-    )
-    this.registerCharacteristic(
-      lightService.getCharacteristic(Characteristic.Saturation),
-      light.onSaturation,
-      (sat) => onSetSaturation.next(sat)
+      (brightness) => {
+        if (audioTrack) light.setAudioTrack(audioTrack)
+        light.setVolume(brightness)
+      }
     )
 
     this.registerCharacteristic(
       batteryService.getCharacteristic(Characteristic.BatteryLevel),
       light.onBatteryLevel
-    )
-    this.registerCharacteristic(
-      batteryService.getCharacteristic(Characteristic.StatusLowBattery),
-      light.onBatteryLevel.pipe(
-        map((batteryLevel) => (batteryLevel < 20 ? 1 : 0))
-      )
-    )
-    batteryService
-      .getCharacteristic(Characteristic.ChargingState)
-      .updateValue(2) // "not chargeable". no way to detect if it is plugged in.
-
-    this.registerCharacteristic(
-      speakerService.getCharacteristic(Characteristic.Volume),
-      light.onVolume,
-      (volume) => light.setVolume(volume)
-    )
-    this.registerCharacteristic(
-      speakerService.getCharacteristic(Characteristic.Mute),
-      light.onVolume.pipe(map((volume) => volume === 0)),
-      (mute) => {
-        light.setVolume(mute ? 0 : 50)
-      }
     )
 
     accessoryInfoService

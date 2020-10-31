@@ -1,7 +1,7 @@
 import { ApiConfig, HatchBabyApi } from './api'
 import { hap, platformName, pluginName } from './hap'
 import { useLogger } from './util'
-import { HatchBabyRestPlusAccessory } from './accessories/hatch-baby-rest-plus'
+import { HatchBabyRestPlusVolumeAccessory } from './accessories/hatch-baby-rest-plus-volume'
 import {
   API,
   DynamicPlatformPlugin,
@@ -9,10 +9,15 @@ import {
   PlatformAccessory,
   PlatformConfig,
 } from 'homebridge'
+import { AudioTrack } from './hatch-baby-types'
 
 const debug = __filename.includes('release')
 
 process.env.HBR_DEBUG = debug ? 'true' : ''
+
+interface AudioTrackConfig {
+  audioTrack: AudioTrack
+}
 
 export class HatchBabyRestPlatform implements DynamicPlatformPlugin {
   private readonly homebridgeAccessories: {
@@ -21,7 +26,9 @@ export class HatchBabyRestPlatform implements DynamicPlatformPlugin {
 
   constructor(
     public log: Logging,
-    public config: PlatformConfig & ApiConfig & { removeAll: boolean },
+    public config: PlatformConfig &
+      ApiConfig &
+      AudioTrackConfig & { removeAll: boolean },
     public api: API
   ) {
     useLogger({
@@ -93,7 +100,11 @@ export class HatchBabyRestPlatform implements DynamicPlatformPlugin {
         homebridgeAccessory =
           this.homebridgeAccessories[uuid] || createHomebridgeAccessory()
 
-      new HatchBabyRestPlusAccessory(light, homebridgeAccessory)
+      new HatchBabyRestPlusVolumeAccessory(
+        light,
+        homebridgeAccessory,
+        this.config.audioTrack
+      )
 
       this.homebridgeAccessories[uuid] = homebridgeAccessory
       activeAccessoryIds.push(uuid)

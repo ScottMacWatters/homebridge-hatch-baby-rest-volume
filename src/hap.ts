@@ -5,5 +5,5 @@ export function setHap(hapInstance: HAP) {
   hap = hapInstance
 }
 
-export const pluginName = 'homebridge-hatch-baby-rest'
-export const platformName = 'HatchBabyRest'
+export const pluginName = 'homebridge-hatch-baby-rest-volume'
+export const platformName = 'HatchBabyRestVolume'
