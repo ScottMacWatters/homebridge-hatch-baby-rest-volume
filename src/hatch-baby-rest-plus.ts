@@ -51,6 +51,11 @@ export class HatchBabyRestPlus {
     filter((state): state is LightState => state !== null)
   )
 
+  onAudioOn = this.onState.pipe(
+    map((state) => state.a.t > 0),
+    distinctUntilChanged()
+  )
+
   onVolume = this.onState.pipe(
     map((state) => convertToPercentage(state.a.v)),
     distinctUntilChanged()

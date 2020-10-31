@@ -1,15 +1,16 @@
 import { HatchBabyRestPlus } from '../hatch-baby-rest-plus'
 import { hap } from '../hap'
-import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators'
-import { combineLatest, Observable, of, Subject } from 'rxjs'
+import { distinctUntilChanged, map, take } from 'rxjs/operators'
+import { Observable, of } from 'rxjs'
 import {
-  PlatformAccessory,
-  WithUUID,
-  Service as ServiceClass,
   Characteristic as CharacteristicClass,
   CharacteristicEventTypes,
   CharacteristicSetCallback,
   CharacteristicValue,
+  Logging,
+  PlatformAccessory,
+  Service as ServiceClass,
+  WithUUID,
 } from 'homebridge'
 import { AudioTrack } from '../hatch-baby-types'
 
@@ -17,33 +18,31 @@ export class HatchBabyRestPlusVolumeAccessory {
   constructor(
     private light: HatchBabyRestPlus,
     private accessory: PlatformAccessory,
+    public log: Logging,
     private audioTrack?: AudioTrack
   ) {
     const { Service, Characteristic } = hap,
       lightService = this.getService(Service.Lightbulb),
       batteryService = this.getService(Service.BatteryService),
-      accessoryInfoService = this.getService(Service.AccessoryInformation),
-      onSetHue = new Subject<number>(),
-      onSetSaturation = new Subject<number>()
-
-    combineLatest([onSetHue, onSetSaturation])
-      .pipe(debounceTime(100))
-      .subscribe(([hue, saturation]) => {
-        light.setColorFromHueAndSaturation(hue, saturation)
-      })
+      accessoryInfoService = this.getService(Service.AccessoryInformation)
 
     this.registerCharacteristic(
       lightService.getCharacteristic(Characteristic.On),
-      light.onIsPowered,
-      (on) => light.setVolume(on ? 25 : 0)
+      light.onAudioOn,
+      (on) => {
+        log.info('ON: ' + on)
+        light.setAudioTrack(
+          on ? audioTrack ?? AudioTrack.PinkNoise : AudioTrack.None
+        )
+      }
     )
 
     this.registerCharacteristic(
       lightService.getCharacteristic(Characteristic.Brightness),
-      light.onBrightness,
-      (brightness) => {
-        if (audioTrack) light.setAudioTrack(audioTrack)
-        light.setVolume(brightness)
+      light.onVolume,
+      (volume) => {
+        log.info('VOLUME: ' + volume)
+        light.setVolume(volume)
       }
     )
 

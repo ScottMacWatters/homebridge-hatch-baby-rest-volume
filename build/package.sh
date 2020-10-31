@@ -10,4 +10,3 @@ cp package-lock.json release
 cp LICENSE release
 cp README.md release
 cp CHANGELOG.md release
-cp config.schema.json release

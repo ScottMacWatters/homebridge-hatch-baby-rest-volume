@@ -83,8 +83,8 @@ export class HatchBabyRestPlatform implements DynamicPlatformPlugin {
     }
 
     lights.forEach((light) => {
-      const uuid = hap.uuid.generate(debugPrefix + light.id),
-        displayName = debugPrefix + light.name,
+      const uuid = hap.uuid.generate(debugPrefix + light.id + 'volume'),
+        displayName = debugPrefix + light.name + ' Volume',
         createHomebridgeAccessory = () => {
           const accessory = new api.platformAccessory(
             displayName,
@@ -103,6 +103,7 @@ export class HatchBabyRestPlatform implements DynamicPlatformPlugin {
       new HatchBabyRestPlusVolumeAccessory(
         light,
         homebridgeAccessory,
+        this.log,
         this.config.audioTrack
       )
 
