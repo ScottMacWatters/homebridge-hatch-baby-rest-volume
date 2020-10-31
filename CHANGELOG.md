@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1-alpha.0](https://github.com/ScottMacWatters/homebridge-hatch-baby-rest-volume/compare/v2.0.5...v0.1.1-alpha.0) (2020-10-31)
+
 ### [2.0.5](https://github.com/dgreif/homebridge-hatch-baby-rest/compare/v2.0.4...v2.0.5) (2020-09-13)
 
 ### [2.0.4](https://github.com/dgreif/homebridge-hatch-baby-rest/compare/v2.0.3...v2.0.4) (2020-06-05)
